@@ -1,4 +1,10 @@
 import unittest
+from backend.utils.metrics import (
+    average_turn_words,
+    compute_talk_ratio,
+    longest_monologue_words,
+    speaker_turn_counts,
+)
 from backend.utils.transcript_cleaner import clean_turns, normalize_speaker
 from backend.utils.validators import validate_conversation_payload
 
@@ -21,6 +27,19 @@ class TestTranscriptUtils(unittest.TestCase):
         }
         errors = validate_conversation_payload(payload)
         self.assertTrue(any("timestamp" in e for e in errors))
+
+    def test_metrics_and_empty_guards(self):
+        self.assertEqual(compute_talk_ratio([]), {})
+        self.assertEqual(average_turn_words([]), 0.0)
+        turns = [
+            {"speaker": "agent", "text": "hello how can I help"},
+            {"speaker": "agent", "text": "today"},
+            {"speaker": "customer", "text": "billing question"},
+        ]
+        ratios = compute_talk_ratio(turns)
+        self.assertAlmostEqual(ratios["agent"], 0.75, places=2)
+        self.assertEqual(speaker_turn_counts(turns), {"agent": 2, "customer": 1})
+        self.assertEqual(longest_monologue_words(turns), 6)
 
 if __name__ == "__main__":
     unittest.main()
