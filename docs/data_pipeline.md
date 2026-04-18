@@ -6,3 +6,6 @@ Notes for running batch scripts inside `data/scripts/`.
 1. Normalize timestamps to UTC.
 2. Strip malformed speaker tags.
 3. Deduplicate message IDs.
+
+## Error Handling
+Failed batches are logged with offset checkpoints for idempotent retries.
