@@ -9,3 +9,6 @@ Notes for running batch scripts inside `data/scripts/`.
 
 ## Error Handling
 Failed batches are logged with offset checkpoints for idempotent retries.
+
+## Performance Benchmarks
+Batch inserts tuned to 100 rows per transaction to reduce DB lock contention.
