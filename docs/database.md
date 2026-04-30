@@ -8,3 +8,6 @@ Documenting tables initialized via `init.sql` and indexing strategy.
 
 ## Data Retention
 Raw payloads archived after aggregation; processed metrics retained indefinitely.
+
+## Migrations
+Keep `init.sql` aligned with incremental schema updates during early dev.
