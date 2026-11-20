@@ -16,9 +16,29 @@
 
 ---
 
+## 🤝 Origin & Credits
+
+This project is based on the original **Conversation Intelligence** codebase by [vichitrarora](https://github.com/vichitrarora), released under the MIT License. The original copyright notice is preserved in the `LICENSE` file.
+
+This repository is my working copy. I use it to study the architecture and to extend it with my own changes, which are listed below.
+
+---
+
+## 🛠️ My Contributions
+
+> Fill this section in only with work you have actually done and committed.
+> Each bullet should match a real commit or pull request in this repository.
+
+- [ ] _Example: Added `<feature name>`, which does `<what it does>` (see commit `abc1234`)_
+- [ ] _Example: Wrote unit tests for the `/chat` and `/transcript` endpoints_
+- [ ] _Example: Fixed `<bug>` in `<file>`_
+- [ ] _Example: Documented the API and added a `.env.example`_
+
+---
+
 ## 📌 Problem Statement
 
-Analyzing thousands of conversation transcripts manually to uncover customer intents, track resolution schemas, and extract nuanced analytical insights is extremely inefficient. **This platform** solves this by leveraging a LangGraph-powered RAG agent running over a vector database of chunked transcripts. Users can upload transcripts, query over conversational histories using natural language, and seamlessly retrieve structured analytical intelligence directly backed by context citations.
+Analyzing thousands of conversation transcripts manually to uncover customer intents, track resolution schemas, and extract nuanced analytical insights is extremely inefficient. **This platform** addresses this with a LangGraph-powered RAG agent running over a vector database of chunked transcripts. Users can upload transcripts, query conversational histories in natural language, and retrieve structured analytical intelligence backed by context citations.
 
 ---
 
@@ -26,13 +46,13 @@ Analyzing thousands of conversation transcripts manually to uncover customer int
 
 | Feature | Description |
 |---|---|
-| **🧠 LangGraph RAG Agent** | Complex multi-stage reasoning to analyze queries, retrieve relevant transcript chunks, and generate accurate final answers. |
-| **🔍 Multi-LLM Orchestration** | Agnostic support leveraging Google Gemini, OpenAI, and HuggingFace models for scalable intelligence. |
-| **📅 Vector Search & Retrieval** | Transcripts are chunked, embedded via Sentence Transformers, and indexed into a PostgreSQL database with `pgvector` (`VECTOR(768)`). |
-| **👤 Schema Tracking Engine** | Built-in domain schema agent to dynamically map transcripts to domains, intents, and issue categories automatically. |
-| **💬 Threaded Memories** | Agent state retains long-term memory and contextual feedback across sessions, uniquely identifying past queries via `thread_id`. |
-| **⚡ Real-time Interface** | A responsive React 19 SPA built on Vite, drawing inspiration from leading chat engines, served efficiently via Nginx. |
-| **📦 Containerized Simplicity** | Out-of-the-box infrastructure featuring Docker Compose with auto-scaffolded database initializations. |
+| **🧠 LangGraph RAG Agent** | Multi-stage reasoning to analyze queries, retrieve relevant transcript chunks, and generate accurate final answers. |
+| **🔀 Multi-LLM Orchestration** | Model-agnostic support for Google Gemini, OpenAI, and HuggingFace models. |
+| **🔍 Vector Search & Retrieval** | Transcripts are chunked, embedded with Sentence Transformers, and indexed in PostgreSQL using `pgvector` (`VECTOR(768)`). |
+| **🗂️ Schema Tracking Engine** | A domain schema agent that maps transcripts to domains, intents, and issue categories. |
+| **💬 Threaded Memory** | Agent state keeps context across a session, identifying past queries via `thread_id`. |
+| **⚡ Responsive Interface** | A React 19 SPA built on Vite, with a chat-style UI, served via Nginx. |
+| **📦 Containerized Setup** | Docker Compose setup with automatic database initialization. |
 
 ---
 
@@ -81,27 +101,27 @@ Analyzing thousands of conversation transcripts manually to uncover customer int
 
 ```text
 project-root/
-├── backend/                        # Python FastAPI Backend
+├── backend/                        # Python FastAPI backend
 │   ├── agents/                     # LangGraph specialized agents (e.g. Schema Agent)
 │   ├── llm/                        # LLM model configuration and integrations
-│   ├── memory/                     # Agent state memories and long-term context
-│   ├── nodes/                      # Logic nodes used in LangGraph compilation
+│   ├── memory/                     # Agent state memory and long-term context
+│   ├── nodes/                      # Logic nodes used in the LangGraph workflow
 │   ├── utils/                      # DB pools and external connection helpers
-│   ├── data/                       # Stores the raw transcripts JSON inputs
-│   ├── main.py                     # FastAPI entry point & API definition Router
-│   ├── graph.py                    # LangGraph workflow definition & runtime compilation
-│   ├── state.py                    # Global application state models definitions
-│   ├── Dockerfile                  # Backend API Docker image configuration
-│   └── pyproject.toml              # Python dependencies & package management
+│   ├── data/                       # Raw transcript JSON inputs
+│   ├── main.py                     # FastAPI entry point and API router
+│   ├── graph.py                    # LangGraph workflow definition and compilation
+│   ├── state.py                    # Global application state models
+│   ├── Dockerfile                  # Backend Docker image configuration
+│   └── pyproject.toml              # Python dependencies and package config
 ├── frontend/                       # React + Vite SPA
 │   ├── src/
-│   │   ├── components/            # Reusable UI React components
-│   │   ├── services/              # Backend abstraction and API caller services
-│   │   ├── App.tsx                # Main Application Shell and View Layer
-│   │   └── types.ts               # Global TypeScript interface definitions
+│   │   ├── components/             # Reusable UI components
+│   │   ├── services/               # Backend API client services
+│   │   ├── App.tsx                 # Main application shell
+│   │   └── types.ts                # Global TypeScript interfaces
 │   ├── Dockerfile                  # Multi-stage production Nginx build
 │   └── package.json                # Node modules and build scripts
-├── init.sql                        # PostgreSQL Initialization & Vector Field creation
+├── init.sql                        # PostgreSQL initialization and vector setup
 └── docker-compose.yml              # Multi-container orchestration config
 ```
 
@@ -111,37 +131,37 @@ project-root/
 
 ### Prerequisites
 
-- Docker and Docker Compose installed on your host system.
-- Valid API Keys for Google Gemini or OpenAI.
+- Docker and Docker Compose installed.
+- A valid API key for Google Gemini or OpenAI.
 
-### 1. Clone the Source
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/conversation_intelligence.git
+git clone https://github.com/Devkhunger/conversation_intelligence.git
 cd conversation_intelligence
 ```
 
 ### 2. Configure Environment
 
-The backend consumes standard LLM API credential environment variables. You must provide them contextually either by exporting in your shell or maintaining them within an env file.
+Create a `.env` file in the project root (it is git-ignored, so never commit it) with your credentials:
 
 ```bash
-export GOOGLE_API_KEY="your-google-api-key"
-export OPENAI_API_KEY="your-openai-api-key"
+GOOGLE_API_KEY=your-google-api-key
+OPENAI_API_KEY=your-openai-api-key
 ```
 
-### 3. Spin Up Services
+A `.env.example` file with placeholder values is a good thing to commit so others know which variables are required.
 
-Deploy the Postgres Database, Fast API server, and React UI automatically:
+### 3. Start the Services
 
 ```bash
 docker-compose up --build -d
 ```
 
-Your services are now immediately mapped and available directly via:
+Services will be available at:
 - **Frontend Dashboard:** [http://localhost:8080](http://localhost:8080)
 - **Backend API Docs:** [http://localhost:8010/docs](http://localhost:8010/docs)
-- **Database Port:** `localhost:5434` (mapped inwards to 5432)
+- **Database Port:** `localhost:5434` (mapped to 5432 inside the container)
 
 ---
 
@@ -149,24 +169,24 @@ Your services are now immediately mapped and available directly via:
 
 | Prefix | Method | Description |
 |---|---|---|
-| `/chat` | `POST` | Core RAG conversational query endpoint. Evaluates `query` and maintains dialogue consistency leveraging the `thread_id` memory tracker. |
-| `/transcript` | `POST` | Retrieve complete single transcript payload based on `transcript_id`. |
-| `/transcripts/batch`| `POST` | Retrieve an arbitrary subset of transcript objects matching multiple IDs. |
-| `/schema/stats` | `GET` | Fetches aggregate system-wide domain metadata, intent groupings, and tag vocabularies. |
-| `/health` | `GET` | Rapid connectivity sanity-check probing backend uptime structure. |
+| `/chat` | `POST` | Core RAG query endpoint. Takes a `query` and keeps context using the `thread_id` memory tracker. |
+| `/transcript` | `POST` | Returns a single full transcript by `transcript_id`. |
+| `/transcripts/batch` | `POST` | Returns multiple transcript objects for a list of IDs. |
+| `/schema/stats` | `GET` | Returns aggregate domain metadata, intent groupings, and tag vocabularies. |
+| `/health` | `GET` | Basic health check for backend uptime. |
 
 ---
 
-## 🗄️ Database Initialization Framework
+## 🗄️ Database Initialization
 
-On initial bare-metal provisioning, Docker leverages `init.sql` executing automatically within the Postgres `nlp_postgres` container context enabling semantic features immediately:
+On first startup, Docker runs `init.sql` inside the Postgres `nlp_postgres` container, which enables semantic search:
 1. `CREATE EXTENSION IF NOT EXISTS vector;`
-2. Schemas instantiated inherently: `transcripts`, `transcript_chunks`, and `transcript_embeddings`.
+2. Creates the tables `transcripts`, `transcript_chunks`, and `transcript_embeddings`.
 
-*(Note: Data ingestion populating these tables and updating embeddings traditionally invokes custom ingest scripts feeding out of the `./data` root payloads.)*
+*(Note: Populating these tables and generating embeddings is done with the ingest scripts in `data/scripts`, using the transcript files in the data folder.)*
 
 ---
 
 ## 📜 License
 
-See `LICENSE` file for usage stipulations and distribution restrictions.
+This project is licensed under the MIT License. See the `LICENSE` file for details. The original copyright notice must be retained.
